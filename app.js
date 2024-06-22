@@ -12,7 +12,7 @@ const app = express();
 app.use(
   cors({
     origin: [
-      "http://localhost:3000",
+      "https://course-frontend-pi.vercel.app",
     ],
     methods: ["POST", "GET"],
     credentials: true,
