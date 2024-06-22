@@ -10,17 +10,32 @@ const PORT = process.env.PORT || 3000;
 const app = express();
 
 // CORS setup
-app.use(
-  cors({
-    origin: ["https://course-frontend-pi.vercel.app"],
-    methods: ["POST", "GET", "OPTIONS"],
-    credentials: true,
-    optionsSuccessStatus: 200,
-  })
-);
+const allowedOrigins = ["https://course-frontend-pi.vercel.app"];
 
-// Handle preflight requests for all routes
-app.options("*", cors());
+const corsOptions = {
+  origin: function (origin, callback) {
+    if (allowedOrigins.indexOf(origin) !== -1 || !origin) {
+      callback(null, true);
+    } else {
+      callback(new Error("Not allowed by CORS"));
+    }
+  },
+  methods: ["POST", "GET", "OPTIONS"],
+  credentials: true,
+  optionsSuccessStatus: 200,
+};
+
+app.use(cors(corsOptions));
+
+// Log each request
+app.use((req, res, next) => {
+  console.log(`Request Method: ${req.method}, Request URL: ${req.url}`);
+  console.log("Request Headers:", req.headers);
+  next();
+});
+
+// Handle preflight requests
+app.options("*", cors(corsOptions));
 
 // Body parsing setup
 app.use(express.json());
