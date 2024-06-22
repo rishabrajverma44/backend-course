@@ -12,7 +12,7 @@ const app = express();
 app.use(
   cors({
     origin: [
-      "https://course-frontend-paiksonh0-rishabrajverma44s-projects.vercel.app",
+      "https://backend-course-he0i8mjzh-rishabrajverma44s-projects.vercel.app",
     ],
     methods: ["POST", "GET"],
     credentials: true,
