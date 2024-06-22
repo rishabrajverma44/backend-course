@@ -1,30 +1,32 @@
 const express = require("express");
-const cors = require("cors");
-const mongoose = require("mongoose");
+const bodyParser = require("body-parser");
 require("dotenv").config({ path: "config/config.env" });
+const mongoose = require("mongoose");
+const cors = require("cors");
 const userController = require("./controller/user");
 const paymentController = require("./controller/paymentController");
+const PORT = process.env.PORT;
 
-const PORT = process.env.PORT || 3000;
 const app = express();
+app.use(
+  cors({
+    origin: ["http://localhost:3000"],
+    methods: ["POST", "GET"],
+    credentials: true,
+    optionsSuccessStatus: 200,
+  })
+);
+app.options("*", cors());
 
-// CORS setup
-const corsOptions = {
-  origin: [
-    "https://backend-course-he0i8mjzh-rishabrajverma44s-projects.vercel.app",
-    "https://course-frontend-pi.vercel.app",
-  ],
-  methods: ["POST", "GET"],
-  credentials: true,
-  optionsSuccessStatus: 200,
-};
-
-app.use(cors(corsOptions));
-
-// Body parsing setup
 app.use(express.json());
+// Set the view engine to EJS
+app.set("view engine", "ejs");
+// Specify the views directory
+app.set("views", "./views");
 
-// MongoDB connection
+app.use(bodyParser.urlencoded({ extended: false }));
+app.use(bodyParser.json());
+
 mongoose
   .connect(process.env.MONGO_URI, {
     useNewUrlParser: true,
@@ -33,7 +35,6 @@ mongoose
   .then(() => console.log("Connected to MongoDB"))
   .catch((err) => console.error("Error in connecting to MongoDB:", err));
 
-// Routes
 app.get("/", (req, res) => {
   res.json("hello from SERVER");
 });
@@ -51,7 +52,6 @@ app.get("/getkey", (req, res) =>
   res.status(200).json({ key: process.env.KEY })
 );
 
-// Start server
 app.listen(PORT, () => {
-  console.log(`Backend Running At Port ${PORT}`);
+  console.log(`Backend Running At Port ` + PORT);
 });
