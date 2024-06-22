@@ -1,11 +1,11 @@
 const express = require("express");
-require("dotenv").config({ path: "config/config.env" });
-const mongoose = require("mongoose");
 const cors = require("cors");
+const mongoose = require("mongoose");
+require("dotenv").config({ path: "config/config.env" });
 const userController = require("./controller/user");
 const paymentController = require("./controller/paymentController");
 
-const PORT = process.env.PORT;
+const PORT = process.env.PORT || 3000;
 const app = express();
 
 // CORS setup
@@ -19,7 +19,6 @@ app.use(
     optionsSuccessStatus: 200,
   })
 );
-app.options("*", cors());
 
 // Body parsing setup
 app.use(express.json());
