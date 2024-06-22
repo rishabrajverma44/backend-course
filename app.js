@@ -13,6 +13,7 @@ app.use(
   cors({
     origin: [
       "https://backend-course-he0i8mjzh-rishabrajverma44s-projects.vercel.app",
+      "https://course-frontend-pi.vercel.app",
     ],
     methods: ["POST", "GET"],
     credentials: true,
