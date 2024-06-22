@@ -9,17 +9,17 @@ const PORT = process.env.PORT || 3000;
 const app = express();
 
 // CORS setup
-app.use(
-  cors({
-    origin: [
-      "https://backend-course-he0i8mjzh-rishabrajverma44s-projects.vercel.app",
-      "https://course-frontend-pi.vercel.app",
-    ],
-    methods: ["POST", "GET"],
-    credentials: true,
-    optionsSuccessStatus: 200,
-  })
-);
+const corsOptions = {
+  origin: [
+    "https://backend-course-he0i8mjzh-rishabrajverma44s-projects.vercel.app",
+    "https://course-frontend-pi.vercel.app",
+  ],
+  methods: ["POST", "GET"],
+  credentials: true,
+  optionsSuccessStatus: 200,
+};
+
+app.use(cors(corsOptions));
 
 // Body parsing setup
 app.use(express.json());
