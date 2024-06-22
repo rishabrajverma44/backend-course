@@ -10,7 +10,7 @@ const PORT = process.env.PORT;
 const app = express();
 app.use(
   cors({
-    origin: ["http://localhost:3000"],
+    origin: ["https://course-frontend-pi.vercel.app"],
     methods: ["POST", "GET"],
     credentials: true,
     optionsSuccessStatus: 200,
