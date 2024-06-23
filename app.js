@@ -7,35 +7,17 @@ const userController = require("./controller/user");
 const paymentController = require("./controller/paymentController");
 const PORT = process.env.PORT || 3000;
 
-const app = express();
-
 // CORS setup
-const allowedOrigins = ["https://course-frontend-pi.vercel.app"];
-
-const corsOptions = {
-  origin: function (origin, callback) {
-    if (allowedOrigins.indexOf(origin) !== -1 || !origin) {
-      callback(null, true);
-    } else {
-      callback(new Error("Not allowed by CORS"));
+const app = express();
+app.use(cors(
+    {
+        origin: ["https://course-selling-app-six.vercel.app"],
+        methods: ["POST", "GET"],
+        credentials: true,
+        optionsSuccessStatus: 200,
     }
-  },
-  methods: ["POST", "GET", "OPTIONS"],
-  credentials: true,
-  optionsSuccessStatus: 200,
-};
-
-app.use(cors(corsOptions));
-
-// Log each request
-app.use((req, res, next) => {
-  console.log(`Request Method: ${req.method}, Request URL: ${req.url}`);
-  console.log("Request Headers:", req.headers);
-  next();
-});
-
-// Handle preflight requests
-app.options("*", cors(corsOptions));
+));
+app.options('*', cors());
 
 // Body parsing setup
 app.use(express.json());
