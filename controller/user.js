@@ -1,17 +1,16 @@
 require("dotenv").config({ path: "config/config.env" });
-const fs = require('fs');
-const path = require('path');
-const htmlTemplatePath = path.join(__dirname, 'email-template.html');
-const htmlTemplate = fs.readFileSync(htmlTemplatePath, 'utf8');
-const htmlVerifiedPath = path.join(__dirname, 'email-verified.html');
-const htmlVerified = fs.readFileSync(htmlVerifiedPath, 'utf8');
-
+const fs = require("fs");
+const path = require("path");
+const htmlTemplatePath = path.join(__dirname, "email-template.html");
+const htmlTemplate = fs.readFileSync(htmlTemplatePath, "utf8");
+const htmlVerifiedPath = path.join(__dirname, "email-verified.html");
+const htmlVerified = fs.readFileSync(htmlVerifiedPath, "utf8");
 
 const UserModel = require("../models/user");
 const nodemailer = require("nodemailer");
 const notifier = require("node-notifier");
 const user = require("../models/user");
-const BACKEND_URL=process.env.BACKEND_URL;
+const BACKEND_URL = process.env.BACKEND_URL;
 
 module.exports.signup = async (req, res) => {
   const newUser = new UserModel({
@@ -28,10 +27,9 @@ module.exports.signup = async (req, res) => {
     // if (user) {
     //   notifier.notify({ title: "Alert!", message: "Email already exists" });
     //   res.send({ code: 500, message: "Email already exists" });
-    // } else 
+    // } else
     {
-
-             //save data to create and track user_id for sending mail
+      //save data to create and track user_id for sending mail
       await newUser
         .save()
         .then()
@@ -43,7 +41,6 @@ module.exports.signup = async (req, res) => {
         let user = await UserModel.findOne({ email: req.body.email });
         const user_id = user._id;
         await sendVerifyMail(req.body.name, req.body.email, user_id);
-
       } catch (error) {
         console.log("error in sending mail  " + error);
       }
@@ -71,8 +68,11 @@ const sendVerifyMail = async (name, email, user_id) => {
     });
 
     const processedHtmlTemplate = htmlTemplate
-  .replace('{name}', name)
-  .replace('{verificationLink}', `${BACKEND_URL}/signupverify?id=${encodeURIComponent(user_id)}`);
+      .replace("{name}", name)
+      .replace(
+        "{verificationLink}",
+        `${BACKEND_URL}/signupverify?id=${encodeURIComponent(user_id)}`
+      );
 
     const mailOptions = {
       from: process.env.EMAIL_SEVICE,
@@ -81,19 +81,13 @@ const sendVerifyMail = async (name, email, user_id) => {
       html: processedHtmlTemplate,
     };
 
-
-   await transporter.sendMail(mailOptions, function (err, info) {
+    await transporter.sendMail(mailOptions, function (err, info) {
       if (err) {
         console.log("eroor in sending verification mail 86 line" + err);
       } else {
         console.log("verification Email has been sent : ");
       }
     });
-
-
-    
-   
-    
   } catch (error) {
     console.log("error in sending mail" + error.message);
   }
@@ -108,7 +102,7 @@ module.exports.verifyMail = async (req, res) => {
   }
 };
 
-module.exports.signin =async (req, res) => {
+module.exports.signin = async (req, res) => {
   // email and password match
 
   await UserModel.findOne({ email: req.body.email })
@@ -119,7 +113,7 @@ module.exports.signin =async (req, res) => {
           notifier.notify({ title: "Alert!", message: "YOUR password wrong" });
           res.send({ code: 404, message: "password wrong" });
         } else {
-           res.send({
+          res.send({
             email: result.email,
             name: result.name,
             code: 200,
@@ -166,15 +160,28 @@ module.exports.sendotp = async (req, res) => {
       to: req.body.email, // list of receivers
       subject: "OTP", // Subject line
       text: String(_otp),
-      html:
-        `<html>
-            < body >
-            Hello and welcome <h1>YOUR OTP IS : ` +
-        _otp +
-        `</h1><h3>with Regards,</h3><h3>online course selling app</h3>
-        </body>
-        </ >
-       </html > `,
+      html: `<html>
+    <body>
+      <div style="font-family: Arial, sans-serif; background-color: #f4f4f4; margin: 0; padding: 0;">
+        <div style="max-width: 600px; margin: 20px auto; background-color: #ffffff; padding: 20px; border-radius: 8px; box-shadow: 0 0 10px rgba(0,0,0,0.1);">
+          <div style="text-align: center; margin-bottom: 20px;">
+            <h1 style="color: #333; font-size: 28px; margin: 0;">Forget Password OTP</h1>
+          </div>
+          <div style="background-color: #f9f9f9; padding: 20px; border-left: 4px solid #3498db; border-radius: 4px;">
+            <p>Dear User,</p>
+            <p>We have received a request to reset your password. Here is your One-Time Password (OTP) to proceed:</p>
+            <h2 style="text-align: center; margin-top: 20px;"><strong>${_otp}</strong></h2>
+            <p>If you did not request this, please ignore this email.</p>
+            <p>With Regards,</p>
+            <p>Online Course Selling App Team</p>
+          </div>
+          <div style="text-align: center; margin-top: 20px; color: #888; font-size: 14px;">
+            <p>&copy; 2024 Online Course Selling App. All rights reserved.</p>
+          </div>
+        </div>
+      </div>
+    </body>
+  </html>`,
     });
 
     if (info.messageId) {
@@ -217,14 +224,6 @@ module.exports.submitotp = (req, res) => {
       res.send({ code: 500, message: "otp is wrong" });
     });
 };
-
-
-
-
-
-
-
-
 
 module.exports.profileupdate = async (req, res) => {
   try {
@@ -275,7 +274,7 @@ module.exports.profileupdate = async (req, res) => {
     await res.send({
       email: result.email,
       name: result.name,
-      mobile:result.mobile,
+      mobile: result.mobile,
       code: 200,
       message: "Profile-Updated",
       token: "hfgdhg",
@@ -285,8 +284,6 @@ module.exports.profileupdate = async (req, res) => {
       title: "Alert!",
       message: "Profile Updated",
     });
-
-
   } catch (error) {
     console.error("Error updating profile:", error);
     notifier.notify({
