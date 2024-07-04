@@ -173,7 +173,7 @@ module.exports.sendotp = async (req, res) => {
             <h2 style="text-align: center; margin-top: 20px;"><strong>${_otp}</strong></h2>
             <p>If you did not request this, please ignore this email.</p>
             <p>With Regards,</p>
-            <p>Online Course Selling App Team</p>
+            <p>Rishab raj verma</p>
           </div>
           <div style="text-align: center; margin-top: 20px; color: #888; font-size: 14px;">
             <p>&copy; 2024 Online Course Selling App. All rights reserved.</p>
