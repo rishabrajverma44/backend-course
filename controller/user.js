@@ -70,7 +70,9 @@ const sendVerifyMail = async (name, email, user_id) => {
       .replace("{name}", name)
       .replace(
         "{verificationLink}",
-        `${BACKEND_URL}/signupverify?id=${encodeURIComponent(user_id)}`
+        `${process.env.BACKEND_URL}/signupverify?id=${encodeURIComponent(
+          user_id
+        )}`
       );
 
     const mailOptions = {
